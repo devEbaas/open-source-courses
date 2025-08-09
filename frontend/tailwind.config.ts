@@ -9,7 +9,13 @@ export default {
           DEFAULT: "#10b981", // emerald
           foreground: "#0b3b2e",
         },
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        border: "var(--border)",
       },
+        borderColor: {
+          DEFAULT: "var(--border)",
+        }
     },
   },
   plugins: [],
