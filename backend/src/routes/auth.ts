@@ -14,6 +14,12 @@ router.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(password, 10)
     const user = await User.create({ name, email, passwordHash: hash })
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1d' })
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Solo en https en prod
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 1 día
+    });
     res.status(201).json({ id: user.id, name: user.name, email: user.email, token })
   } catch (e) {
     console.error('Error register', e)
@@ -30,6 +36,12 @@ router.post('/login', async (req, res) => {
     const ok = await bcrypt.compare(password, (user as any).passwordHash)
     if (!ok) return res.status(401).json({ error: 'Credenciales inválidas' })
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1d' })
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Solo en https en prod
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 1 día
+    });
     res.json({ id: user.id, name: user.name, email: user.email, token })
   } catch (e) {
     console.error('Error login', e)
@@ -40,6 +52,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', async (req, res) => {
   try {
     const token = req.cookies.token
+    console.log(token)
     if (!token) return res.status(401).json({ error: 'No autorizado' })
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
     res.json({ user: decoded });

@@ -76,16 +76,14 @@ export const useResult = (resultId: number | string) => {
       const barMaxWidth = 65;
 
       categories.forEach((cat) => {
-        doc.text(cat.categoryName, barX, barY - 2);
+        doc.text(cat.categoryName + " " + cat.correct + "/" + cat.total, barX, barY - 2);
 
         const percent = (cat.correct / cat.total) * 100;
         const barWidth = (percent / 100) * barMaxWidth;
 
-        // barra de fondo gris claro
         doc.setFillColor(220, 220, 220);
         doc.rect(barX, barY, barMaxWidth, barHeight, "F");
 
-        // barra verde con porcentaje
         doc.setFillColor(0, 123, 85);
         doc.rect(barX, barY, barWidth, barHeight, "F");
 
@@ -122,11 +120,15 @@ export const useResult = (resultId: number | string) => {
         });
       });
 
+      y += 10;
+      doc.setTextColor(0);
       doc.setFontSize(14);
       doc.text("Recomendaciones:", 14, y);
       y += 10;
 
       doc.setFontSize(11);
+      const recomendations = doc.splitTextToSize(getRecomendations(), 180);
+      doc.text(recomendations, 14, y);
 
       doc.save("resultado_assessment.pdf");
     }

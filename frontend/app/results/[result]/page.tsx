@@ -109,7 +109,7 @@ function Skill({ label, score, total }: { label: string; score: number; total: n
   return (
     <div>
       <div className="flex items-center justify-between text-sm">
-        <span>{label}</span>
+        <span>{label} {score}/{total}</span>
         <span className="text-gray-600">{percentage.toFixed(0)}%</span>
       </div>
       <div className="mt-1 h-2 w-full rounded-full bg-gray-200">

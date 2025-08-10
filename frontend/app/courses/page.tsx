@@ -27,12 +27,14 @@ export default function CoursesPage() {
           <li key={course.id} className="p-4 border rounded hover:bg-gray-100 transition-colors">
             <h2 className="text-xl font-semibold">{course.name}</h2>
             <p className="mt-2 text-gray-600">{course.description}</p>
-            <Link
-              href={`/assessment/${course.assessment.id}`}
-              className="mt-4 inline-block rounded-md bg-emerald-600 px-4 py-2.5 font-medium text-white hover:bg-emerald-700"
-            >
-              Iniciar Diagnóstico
-            </Link>
+            {course.assessment && (
+              <Link
+                href={`/assessment/${course.assessment.id}`}
+                className="mt-4 inline-block rounded-md bg-emerald-600 px-4 py-2.5 font-medium text-white hover:bg-emerald-700"
+              >
+                Iniciar Diagnóstico
+              </Link>
+            )}
           </li>
         ))}
       </ul>

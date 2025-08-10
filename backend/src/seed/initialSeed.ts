@@ -15,6 +15,15 @@ async function seed() {
       name: 'Desarrollo Fullstack',
       description: 'Curso que cubre fundamentos frontend y backend.'
     })
+    // Cursos adicionales sin assessment (solo para listado)
+    const frontendCourse = await Course.create({
+      name: 'Desarrollo Frontend',
+      description: 'Curso enfocado en HTML, CSS, JavaScript y frameworks de interfaz.'
+    })
+    const backendCourse = await Course.create({
+      name: 'Desarrollo Backend',
+      description: 'Curso enfocado en APIs, bases de datos, autenticación y lógica de negocio.'
+    })
     const assessment = await Assessment.create({
       name: 'Assessment Inicial Fullstack',
       description: 'Evaluación diagnóstica de fundamentos frontend y backend.',
@@ -241,7 +250,7 @@ async function seed() {
 
   // Usuario demo
   const demoUser = await User.create({ name: 'Demo User', email: 'demo@example.com', passwordHash: 'demo-hash' })
-  console.log(`✅ Curso creado: ${fullstackCourse.name} con assessment ${assessment.name} y usuario demo ${demoUser.email}`)
+  console.log(`✅ Cursos creados: ${fullstackCourse.name} (con assessment), ${frontendCourse.name}, ${backendCourse.name}. Usuario demo ${demoUser.email}`)
 
     console.log("✅ Seed completado con éxito");
   } catch (error) {
