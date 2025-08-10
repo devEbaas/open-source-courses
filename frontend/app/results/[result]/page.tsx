@@ -7,7 +7,7 @@ import { useAuth } from "@/app/context/AuthContext";
 export default function ResultsPage() {
   const { result } = useParams();
   const { user } = useAuth();
-  const { assessmentResult, downloadResults } = useResult(result as string);
+  const { assessmentResult, downloadResults, getRecomendations } = useResult(result as string);
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-10">
@@ -48,24 +48,42 @@ export default function ResultsPage() {
           <h2 className="font-semibold">Categorías</h2>
           <div className="mt-3 grid gap-3">
             {assessmentResult?.categories.map((category) => (
-              <Skill key={category.categoryId} label={category.categoryName} score={category.correct} total={category.total} />
+              <Skill
+                key={category.categoryId}
+                label={category.categoryName}
+                score={category.correct}
+                total={category.total}
+              />
             ))}
           </div>
         </div>
-        {/* Create a list of the  assessmentResult.detail, show the question and if the answer is correct or not, apply beautifull styles and icons */}
+      </div>
+      <div>
         <div className="mt-8">
           <h2 className="font-semibold">Detalles</h2>
           <ul className="mt-3 space-y-2">
             {assessmentResult?.detail.map((item) => (
               <li key={item.id} className="flex justify-between">
                 <span>{item.questionText}</span>
-                <span className={item.isCorrect ? "text-emerald-600" : "text-red-600"}>
+                <span
+                  className={
+                    item.isCorrect ? "text-emerald-600" : "text-red-600"
+                  }
+                >
                   {item.isCorrect ? "Correcto" : "Incorrecto"}
                 </span>
               </li>
             ))}
           </ul>
         </div>
+      </div>
+
+      <div className="mt-8">
+        {/* Recomendations */}
+        <h2 className="font-semibold">Recomendaciones</h2>
+        <p className="mt-2 text-gray-600">
+          {getRecomendations()}
+        </p>
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
