@@ -7,21 +7,27 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p .",
     "start": "node dist/server.js",
-    "seed": "tsx src/seed/initialSeed.ts"
+    "seed": "tsx src/seed/initialSeed.ts",
+    "sync:users": "tsx src/scripts/syncUsers.ts",
+    "sync:results": "tsx src/scripts/syncAssessmentResults.ts",
+    "sync:all": "tsx src/scripts/syncAll.ts"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-  "mysql2": "^3.11.0",
-  "sequelize": "^6.37.7",
-  "bcryptjs": "^2.4.3"
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.0",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.2.1",
-  "@types/bcryptjs": "^2.4.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2"

@@ -34,3 +34,9 @@ export enum Name {
   ProgramaciónBackend = "Programación Backend",
   ProgramaciónFrontend = "Programación Frontend",
 }
+
+export interface IResult {
+  resultId: number;
+  score: number;
+  totalQuestions: number;
+}

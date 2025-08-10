@@ -1,10 +1,10 @@
 import { Router } from 'express'
+import jwt from "jsonwebtoken";
 import bcrypt from 'bcryptjs'
 import { User } from '../models'
 
 const router = Router()
 
-// POST /auth/register { name, email, password }
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body as { name: string; email: string; password: string }
@@ -13,14 +13,14 @@ router.post('/register', async (req, res) => {
     if (exists) return res.status(409).json({ error: 'Email ya registrado' })
     const hash = await bcrypt.hash(password, 10)
     const user = await User.create({ name, email, passwordHash: hash })
-    res.status(201).json({ id: user.id, name: user.name, email: user.email })
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1d' })
+    res.status(201).json({ id: user.id, name: user.name, email: user.email, token })
   } catch (e) {
     console.error('Error register', e)
     res.status(500).json({ error: 'DB error' })
   }
 })
 
-// POST /auth/login { email, password }
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body as { email: string; password: string }
@@ -29,12 +29,24 @@ router.post('/login', async (req, res) => {
     if (!user) return res.status(401).json({ error: 'Credenciales inválidas' })
     const ok = await bcrypt.compare(password, (user as any).passwordHash)
     if (!ok) return res.status(401).json({ error: 'Credenciales inválidas' })
-    // Simple response (sin token todavía)
-    res.json({ id: user.id, name: user.name, email: user.email })
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1d' })
+    res.json({ id: user.id, name: user.name, email: user.email, token })
   } catch (e) {
     console.error('Error login', e)
     res.status(500).json({ error: 'DB error' })
   }
 })
+
+router.get('/me', async (req, res) => {
+  try {
+    const token = req.cookies.token
+    if (!token) return res.status(401).json({ error: 'No autorizado' })
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
+    res.json({ user: decoded });
+  } catch (e) {
+    console.error('Error getting user', e)
+    res.status(500).json({ error: 'DB error' })
+  }
+});
 
 export default router
