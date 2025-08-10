@@ -45,13 +45,11 @@ export default function ResultsPage() {
         </div>
 
         <div className="rounded-lg border p-6">
-          <h2 className="font-semibold">Áreas</h2>
+          <h2 className="font-semibold">Categorías</h2>
           <div className="mt-3 grid gap-3">
-            <Skill label="HTML/CSS" score={85} />
-            <Skill label="JavaScript" score={72} />
-            <Skill label="React" score={80} />
-            <Skill label="Node.js" score={65} />
-            <Skill label="Bases de datos" score={60} />
+            {assessmentResult?.categories.map((category) => (
+              <Skill key={category.categoryId} label={category.categoryName} score={category.correct} total={category.total} />
+            ))}
           </div>
         </div>
         {/* Create a list of the  assessmentResult.detail, show the question and if the answer is correct or not, apply beautifull styles and icons */}
@@ -88,15 +86,16 @@ export default function ResultsPage() {
   );
 }
 
-function Skill({ label, score }: { label: string; score: number }) {
+function Skill({ label, score, total }: { label: string; score: number; total: number }) {
+  const percentage = total > 0 ? (score / total) * 100 : 0;
   return (
     <div>
       <div className="flex items-center justify-between text-sm">
         <span>{label}</span>
-        <span className="text-gray-600">{score}%</span>
+        <span className="text-gray-600">{percentage.toFixed(0)}%</span>
       </div>
       <div className="mt-1 h-2 w-full rounded-full bg-gray-200">
-        <div className="h-2 rounded-full bg-emerald-600" style={{ width: `${score}%` }} />
+        <div className="h-2 rounded-full bg-emerald-600" style={{ width: `${percentage}%` }} />
       </div>
     </div>
   )
