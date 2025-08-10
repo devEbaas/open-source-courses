@@ -4,6 +4,6 @@ import { getQuestions } from "../controllers/questionController";
 
 const router = Router();
 
-router.get("/", getQuestions);
+router.get("/questions", getQuestions);
 
 export default router;

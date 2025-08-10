@@ -3,8 +3,7 @@ import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 interface QuestionAttributes {
   id: number;
   text: string;
-  category?: string;
-  difficulty?: string;
+  categoryId: number;
 }
 
 interface QuestionCreationAttributes
@@ -16,8 +15,7 @@ interface QuestionCreationAttributes
   {
     public id!: number;
     public text!: string;
-    public category?: string;
-    public difficulty?: string;
+    public categoryId!: number;
   }
 
 export default (sequelize: Sequelize) => {
@@ -30,6 +28,10 @@ export default (sequelize: Sequelize) => {
       },
       text: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      categoryId: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
       },
     },

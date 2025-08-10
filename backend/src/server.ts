@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { testSequelizeConnection, listCourses, Course } from './sequelize'
+import questionRoutes from './routes/questions'
 
 const app = express()
 
@@ -19,6 +20,8 @@ app.use(express.json())
 app.get('/ping', (_req: Request, res: Response) => {
   res.json({ message: 'pong' })
 })
+
+app.use('/api', questionRoutes);
 
 // app.get('/courses', async (_req: Request, res: Response) => {
 //   try {
