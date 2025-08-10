@@ -10,13 +10,10 @@ interface AnswerAttributes {
 interface AnswerCreationAttributes extends Optional<AnswerAttributes, "id"> {}
 
 export class Answer extends Model<AnswerAttributes, AnswerCreationAttributes> implements AnswerAttributes {
-  public id!: number;
-  public questionId!: number;
-  public text!: string;
-  public isCorrect!: boolean;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare id: number;
+  declare questionId: number;
+  declare text: string;
+  declare isCorrect: boolean;
 }
 
 export default (sequelize: Sequelize) => {

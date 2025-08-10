@@ -13,9 +13,9 @@ interface QuestionCreationAttributes
     extends Model<QuestionAttributes, QuestionCreationAttributes>
     implements QuestionAttributes
   {
-    public id!: number;
-    public text!: string;
-    public categoryId!: number;
+    declare id: number;
+    declare text: string;
+    declare categoryId: number;
   }
 
 export default (sequelize: Sequelize) => {

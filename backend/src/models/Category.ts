@@ -13,8 +13,8 @@ export default (sequelize: Sequelize) => {
     extends Model<CategoryAttributes, CategoryCreationAttributes>
     implements CategoryAttributes
   {
-    public id!: number;
-    public name!: string;
+    declare id: number;
+    declare name: string;
   }
 
   Category.init(
