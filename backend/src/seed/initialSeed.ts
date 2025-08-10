@@ -1,21 +1,24 @@
 import 'dotenv/config';
-import { sequelize, Category, Question, Answer, Course, Assessment } from "../models";
+import { sequelize, Category, Question, Answer, Course, Assessment, User } from "../models";
 
 async function seed() {
   try {
-    await sequelize.sync({ force: true });
+  // Desactivar checks para poder dropear tablas con FKs legacy (assessmentId antiguo)
+  await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+  await sequelize.sync({ force: true });
+  await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
 
     const frontend = await Category.create({ name: "Programación Frontend" });
     const backend = await Category.create({ name: "Programación Backend" });
 
-    const assessment = await Assessment.create({
-      title: 'Assessment Inicial Fullstack',
-      description: 'Evaluación diagnóstica de fundamentos frontend y backend.'
-    })
     const fullstackCourse = await Course.create({
       name: 'Desarrollo Fullstack',
-      description: 'Curso que cubre fundamentos frontend y backend.',
-      assessmentId: assessment.id,
+      description: 'Curso que cubre fundamentos frontend y backend.'
+    })
+    const assessment = await Assessment.create({
+      name: 'Assessment Inicial Fullstack',
+      description: 'Evaluación diagnóstica de fundamentos frontend y backend.',
+      courseId: fullstackCourse.id
     })
 
     const frontendQuestions = [
@@ -233,10 +236,12 @@ async function seed() {
         }
       }
     }
-    await insertQuestions(frontendQuestions.slice(0,5), frontend.id, assessment.id);
-    await insertQuestions(backendQuestions.slice(0,5), backend.id, assessment.id);
+  await insertQuestions(frontendQuestions.slice(0,5), frontend.id, assessment.id);
+  await insertQuestions(backendQuestions.slice(0,5), backend.id, assessment.id);
 
-    console.log(`✅ Curso creado: ${fullstackCourse.name} con assessment ${assessment.title}`)
+  // Usuario demo
+  const demoUser = await User.create({ name: 'Demo User', email: 'demo@example.com', passwordHash: 'demo-hash' })
+  console.log(`✅ Curso creado: ${fullstackCourse.name} con assessment ${assessment.name} y usuario demo ${demoUser.email}`)
 
     console.log("✅ Seed completado con éxito");
   } catch (error) {

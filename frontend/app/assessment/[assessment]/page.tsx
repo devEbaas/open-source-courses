@@ -1,41 +1,35 @@
 "use client";
 import { useParams } from "next/navigation";
 import Link from "next/link"
-
-type Question = {
-  id: number
-  text: string
-  options: string[]
-}
-
-const QUESTIONS: Question[] = Array.from({ length: 10 }).map((_, i) => ({
-  id: i + 1,
-  text: `Pregunta ${i + 1}: Enunciado de ejemplo para evaluar tus conocimientos.`,
-  options: ["Opción A", "Opción B", "Opción C", "Opción D"],
-}))
+import { useAssessment } from "../hooks/useAssessment";
 
 export default function AssessmentPage() {
-  const { assessment } = useParams();
+  const { assessment: assessmentId } = useParams();
+  const { assessment, questions, handleAnswerChange } = useAssessment(assessmentId as string);
+
   return (
     <section className="mx-auto max-w-5xl px-4 py-10">
       <header className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight">Assessment (10 preguntas)</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          {assessment?.name}
+        </h1>
         <p className="mt-2 text-gray-600">
-          Selecciona una opción por pregunta. Esta es una maqueta con preguntas estáticas y sin lógica {assessment}.
+          {assessment?.description}
         </p>
       </header>
+      {/* necesito que cuando el usurio seleccione una respuesta se actualice el estado con la respuesta seleccionada */}
       <div className="grid gap-6">
-        {QUESTIONS.map((q) => (
-          <div key={q.id} className="rounded-lg border p-5">
-            <h2 className="font-semibold">{q.text}</h2>
+        {questions.map((question) => (
+          <div key={question.id} className="rounded-lg border p-5">
+            <h2 className="font-semibold">{question.text}</h2>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              {q.options.map((opt, idx) => (
+              {question.answers.map((answer, idx) => (
                 <label
                   key={idx}
                   className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 hover:bg-gray-50"
                 >
-                  <input type="radio" name={`q-${q.id}`} className="h-4 w-4" />
-                  <span className="text-sm">{opt}</span>
+                  <input type="radio" name={`q-${question.id}`} className="h-4 w-4" onChange={() => handleAnswerChange(question.id, answer)} />
+                  <span className="text-sm">{answer.text}</span>
                 </label>
               ))}
             </div>
@@ -52,5 +46,5 @@ export default function AssessmentPage() {
         </Link>
       </div>
     </section>
-  )
+  );
 }

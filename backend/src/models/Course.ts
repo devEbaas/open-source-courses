@@ -4,16 +4,14 @@ interface CourseAttributes {
   id: number
   name: string
   description: string
-  assessmentId?: number | null
 }
 
-interface CourseCreationAttributes extends Optional<CourseAttributes, 'id' | 'assessmentId'> {}
+interface CourseCreationAttributes extends Optional<CourseAttributes, 'id'> {}
 
 export class Course extends Model<CourseAttributes, CourseCreationAttributes> implements CourseAttributes {
   declare id: number
   declare name: string
   declare description: string
-  declare assessmentId?: number | null
 }
 
 export default (sequelize: Sequelize) => {
@@ -23,10 +21,6 @@ export default (sequelize: Sequelize) => {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
-      },
-      assessmentId: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: true,
       },
       name: {
         type: DataTypes.STRING,
