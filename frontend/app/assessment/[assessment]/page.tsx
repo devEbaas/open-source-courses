@@ -1,3 +1,5 @@
+"use client";
+import { useParams } from "next/navigation";
 import Link from "next/link"
 
 type Question = {
@@ -13,12 +15,13 @@ const QUESTIONS: Question[] = Array.from({ length: 10 }).map((_, i) => ({
 }))
 
 export default function AssessmentPage() {
+  const { assessment } = useParams();
   return (
     <section className="mx-auto max-w-5xl px-4 py-10">
       <header className="mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Assessment (10 preguntas)</h1>
         <p className="mt-2 text-gray-600">
-          Selecciona una opción por pregunta. Esta es una maqueta con preguntas estáticas y sin lógica.
+          Selecciona una opción por pregunta. Esta es una maqueta con preguntas estáticas y sin lógica {assessment}.
         </p>
       </header>
       <div className="grid gap-6">

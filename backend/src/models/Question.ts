@@ -4,6 +4,7 @@ interface QuestionAttributes {
   id: number;
   text: string;
   categoryId: number;
+  assessmentId: number;
 }
 
 interface QuestionCreationAttributes
@@ -15,7 +16,8 @@ interface QuestionCreationAttributes
   {
     declare id: number;
     declare text: string;
-    declare categoryId: number;
+  declare categoryId: number;
+  declare assessmentId: number;
   }
 
 export default (sequelize: Sequelize) => {
@@ -31,6 +33,10 @@ export default (sequelize: Sequelize) => {
         allowNull: false,
       },
       categoryId: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
+      assessmentId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
       },

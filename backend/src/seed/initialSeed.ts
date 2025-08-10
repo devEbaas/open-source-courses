@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { sequelize, Category, Question, Answer } from "../models";
+import { sequelize, Category, Question, Answer, Course, Assessment } from "../models";
 
 async function seed() {
   try {
@@ -7,6 +7,16 @@ async function seed() {
 
     const frontend = await Category.create({ name: "Programación Frontend" });
     const backend = await Category.create({ name: "Programación Backend" });
+
+    const assessment = await Assessment.create({
+      title: 'Assessment Inicial Fullstack',
+      description: 'Evaluación diagnóstica de fundamentos frontend y backend.'
+    })
+    const fullstackCourse = await Course.create({
+      name: 'Desarrollo Fullstack',
+      description: 'Curso que cubre fundamentos frontend y backend.',
+      assessmentId: assessment.id,
+    })
 
     const frontendQuestions = [
       {
@@ -209,10 +219,11 @@ async function seed() {
         text: string;
         answers: { text: string; isCorrect: boolean }[];
       }[],
-      categoryId: number
+      categoryId: number,
+      assessmentId: number,
     ) {
       for (const q of questions) {
-        const question = await Question.create({ text: q.text, categoryId });
+        const question = await Question.create({ text: q.text, categoryId, assessmentId });
         for (const a of q.answers) {
           await Answer.create({
             text: a.text,
@@ -222,9 +233,10 @@ async function seed() {
         }
       }
     }
+    await insertQuestions(frontendQuestions.slice(0,5), frontend.id, assessment.id);
+    await insertQuestions(backendQuestions.slice(0,5), backend.id, assessment.id);
 
-    await insertQuestions(frontendQuestions, frontend.id);
-    await insertQuestions(backendQuestions, backend.id);
+    console.log(`✅ Curso creado: ${fullstackCourse.name} con assessment ${assessment.title}`)
 
     console.log("✅ Seed completado con éxito");
   } catch (error) {
