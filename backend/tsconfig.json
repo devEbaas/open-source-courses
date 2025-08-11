@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
-    "types": ["node"],
+  "types": ["node","jest","supertest"],
     "resolveJsonModule": true
   },
   "include": ["src/**/*"],
