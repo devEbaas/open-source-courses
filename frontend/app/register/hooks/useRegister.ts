@@ -1,60 +1,37 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { registerUser } from "../services/registerService";
-import { IFormData } from "../props.interface";
+import { registerUser, RegisterError } from "../services/registerService";
 import { useAuth } from "@/app/context/AuthContext";
+import type { IFormData } from "../props.interface";
 
-export const useRegister = () => { 
+export const useRegister = () => {
   const router = useRouter();
   const { setUser, user } = useAuth();
-  const [formData, setFormData] = useState<IFormData>({
-    name: '',
-    email: '',
-    password: '',
-  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const saveUser = async () => {
+  const onSubmit = async (data: IFormData & { confirmPassword?: string }) => {
     setIsLoading(true);
+    setError(null);
     try {
-      console.log("Registering user:", formData);
-      const user = await registerUser(formData);
-      setUser(user);
-      router.push("/");
-    } catch (error) {
-      console.error("Error registering user:", error);
-      setError("Ha ocurrido un error al registrar al usuario");
+      const created = await registerUser(data);
+      setUser(created);
+      router.push("/courses");
+    } catch (e: any) {
+      console.error("Error registering user:", e);
+      if (e instanceof RegisterError && e.status === 409) {
+        setError(e.message);
+      } else {
+        setError("Ha ocurrido un error al registrar al usuario");
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await saveUser();
-  };
-
-  const validateSession = async () => {
-    if (user?.id) {
-      router.push("/courses");
-    }
-  };
-
   useEffect(() => {
-    validateSession();
-  }, [user]);
+    if (user?.id) router.push("/courses");
+  }, [user, router]);
 
-  return {
-    formData,
-    isLoading,
-    error,
-    handleChange,
-    handleSubmit,
-  };
+  return { onSubmit, isLoading, error };
 };
