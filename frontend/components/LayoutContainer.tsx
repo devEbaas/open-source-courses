@@ -21,7 +21,7 @@ export const LayoutContainer = ({
             {!user?.id && (
               <Link
                 href="/register"
-                className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-teal-600 text-white font-semibold rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-3xl"
+                className="group relative inline-flex items-center px-8 py-3 bg-gradient-to-r from-purple-600 to-teal-600 text-white font-semibold rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-3xl"
               >
                 <span>Registrate</span>{" "}
               </Link>
