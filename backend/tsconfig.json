@@ -8,8 +8,9 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "allowSyntheticDefaultImports": true,
-  "types": ["node","jest","supertest"],
+  "allowSyntheticDefaultImports": true,
+  // Dev types including test libs; production build uses tsconfig.build.json
+  "types": ["node", "jest", "supertest"],
     "resolveJsonModule": true
   },
   "include": ["src/**/*"],

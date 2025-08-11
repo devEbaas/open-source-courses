@@ -1,38 +1,45 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import { testSequelizeConnection, listCourses } from './sequelize';
+import "dotenv/config";
+import cookieParser from "cookie-parser";
+import express from "express";
+import cors from "cors";
+import { testSequelizeConnection } from "./sequelize";
+import authRoutes from "./routes/auth";
+import courseRoutes from './routes/course.routes';
+import assessmentRoutes from './routes/assessment.routes';
+import { errorHandler } from './middleware/errorHandler';
 const app = express();
+let dbReady = false;
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+const CORS_ORIGIN = process.env.CORS_ORIGIN;
 app.use(cors({
     origin: CORS_ORIGIN,
+    credentials: true,
 }));
+app.use(cookieParser());
 app.use(express.json());
-app.get('/ping', (_req, res) => {
-    res.json({ message: 'pong' });
+app.get("/ping", (_req, res) => {
+    return res.status(200).json({ message: "pong", db: dbReady ? 'ok' : 'pending' });
 });
-app.get('/courses', async (_req, res) => {
-    try {
-        const rows = await listCourses(100);
-        res.json(rows);
-    }
-    catch (e) {
-        console.error('Error fetching courses', e);
-        res.status(500).json({ error: 'DB error' });
-    }
-});
+app.use("/auth", authRoutes);
+app.use('/courses', courseRoutes);
+app.use('/assessments', assessmentRoutes);
+app.use(errorHandler);
 async function start() {
+    app.listen(PORT, () => {
+        console.log(`[backend] listening on http://localhost:${PORT}`);
+        connectToDatabase();
+    });
+}
+async function connectToDatabase() {
     try {
         await testSequelizeConnection();
-        console.log('[backend] DB conectado (Sequelize)');
-        app.listen(PORT, () => {
-            console.log(`[backend] listening on http://localhost:${PORT}`);
-        });
+        dbReady = true;
+        console.log("[backend] DB conectado (Sequelize)");
     }
     catch (e) {
-        console.error('[backend] No se pudo conectar a la DB', e);
-        process.exit(1);
+        dbReady = false;
+        console.error("[backend] Error conectando a la DB, reintentando en 5s");
+        setTimeout(connectToDatabase, 5000);
     }
 }
 start();
