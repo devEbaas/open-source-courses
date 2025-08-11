@@ -20,8 +20,11 @@ export default function AssessmentPage() {
           {assessment?.name}
         </h1>
         <p className="mt-2 text-gray-600">{assessment?.description}</p>
+        <p className="mt-2 text-gray-600">
+          Selecciona la respuesta que consideres correcta, este es un test
+          diagnóstico que servirá para evaluar tus conocimientos.
+        </p>
       </header>
-      {/* necesito que cuando el usurio seleccione una respuesta se actualice el estado con la respuesta seleccionada */}
       <div className="grid gap-6">
         {questions.map((question) => (
           <div key={question.id} className="rounded-lg border p-5">

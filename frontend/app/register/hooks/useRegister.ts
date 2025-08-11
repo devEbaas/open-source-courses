@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerUser } from "../services/registerService";
 import { IFormData } from "../props.interface";
@@ -6,7 +6,7 @@ import { useAuth } from "@/app/context/AuthContext";
 
 export const useRegister = () => { 
   const router = useRouter();
-  const { setUser } = useAuth();
+  const { setUser, user } = useAuth();
   const [formData, setFormData] = useState<IFormData>({
     name: '',
     email: '',
@@ -39,6 +39,16 @@ export const useRegister = () => {
     e.preventDefault();
     await saveUser();
   };
+
+  const validateSession = async () => {
+    if (user?.id) {
+      router.push("/courses");
+    }
+  };
+
+  useEffect(() => {
+    validateSession();
+  }, [user]);
 
   return {
     formData,
