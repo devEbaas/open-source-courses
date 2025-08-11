@@ -94,7 +94,8 @@ Si deseas crear un proyecto Next.js desde cero en otro contexto, `create-next-ap
 
 ## Nota
 
-Se desplegó la app utilizando vercel (Frontend) y Render (Backend) utilizando un servicio free de mysql, la url es https://courses.bekadev.online/
+- Se desplegó la app utilizando vercel (Frontend) y se le agregó un dominio personal
+- Render (Backend) utilizando un servicio free de mysql, la url es https://courses.bekadev.online/
 
 ## Preguntas para la prueba técnica
 
