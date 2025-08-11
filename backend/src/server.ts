@@ -23,27 +23,29 @@ app.use(cookieParser());
 
 app.use(express.json());
 
-app.get("/ping", (_req: Request, res: Response) => res.json({ message: "pong" }));
+app.get("/ping", (_req: Request, res: Response) => res.status(200).json({ message: "pong" }));
 
-// app.use('/api', questionRoutes);
 app.use("/auth", authRoutes);
 
-// Rutas agrupadas
 app.use('/courses', courseRoutes)
 app.use('/assessments', assessmentRoutes)
-// error handler al final
+
 app.use(errorHandler)
 
 async function start(): Promise<void> {
+  app.listen(PORT, () => {
+    console.log(`[backend] listening on http://localhost:${PORT}`);
+    connectToDatabase();
+  });
+}
+
+async function connectToDatabase(): Promise<void> {
   try {
     await testSequelizeConnection();
     console.log("[backend] DB conectado (Sequelize)");
-    app.listen(PORT, () => {
-      console.log(`[backend] listening on http://localhost:${PORT}`);
-    });
   } catch (e) {
-    console.error("[backend] No se pudo conectar a la DB", e);
-    process.exit(1);
+    console.error("[backend] Error conectando a la DB, reintentando en 5s", e);
+    setTimeout(connectToDatabase, 5000); // reintenta sin bloquear
   }
 }
 
