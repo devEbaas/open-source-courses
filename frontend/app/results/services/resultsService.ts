@@ -3,7 +3,7 @@ import { IAssessmentResult } from "../props.interface";
 
 export const fetchResult = async (resultId: number | string) => {
   try {
-    const response = await api.get(`/assessment-results/${resultId}`);
+    const response = await api.get(`/assessments/result/detail/${resultId}`);
     const result: IAssessmentResult = response.data;
     return result;
   } catch (error) {

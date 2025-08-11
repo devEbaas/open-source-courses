@@ -13,6 +13,7 @@ export const useRegister = () => {
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,6 +29,7 @@ export const useRegister = () => {
       router.push("/");
     } catch (error) {
       console.error("Error registering user:", error);
+      setError("Ha ocurrido un error al registrar al usuario");
     } finally {
       setIsLoading(false);
     }
@@ -41,6 +43,7 @@ export const useRegister = () => {
   return {
     formData,
     isLoading,
+    error,
     handleChange,
     handleSubmit,
   };

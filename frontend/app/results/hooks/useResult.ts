@@ -14,14 +14,16 @@ export const useResult = (resultId: number | string) => {
   };
 
   const getRecomendations = () => {
-    // verifica que category tuvo menor puntaje para recomendarle tomar ese curso, en caso de que ambos esten iguales, felicitarlo y decirle que puede continuar con el curso
     const { categories } = assessmentResult || {};
     const aprobacionPercent = 0.7;
     if (categories) {
       const minCategory = categories.reduce((prev, curr) =>
         prev.correct / prev.total < curr.correct / curr.total ? prev : curr
       );
-      if (minCategory.correct / minCategory.total < aprobacionPercent) {
+      // si reprobó todas las categorías decirle que debe tomar las que reprobó primero
+      if (categories.every((cat) => cat.correct / cat.total < aprobacionPercent)) {
+        return `Te recomendamos tomar los cursos de ${categories.map((cat) => cat.categoryName).join(", ")} para mejorar tu desempeño y así puedas avanzar de manera correcta durante el transcurso del curso.`;
+      } else if (minCategory.correct / minCategory.total < aprobacionPercent) {
         return `Te recomendamos tomar el curso de ${minCategory.categoryName} para mejorar tu desempeño y así puedas avanzar de manera correcta durante el transcurso del curso.`;
       } else {
         return `¡Felicidades! Tienes el conocimiento necesario para continuar con el curso. Nos alegra mucho tenerte aquí.`;

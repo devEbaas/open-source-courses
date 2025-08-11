@@ -1,28 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRegister } from "./hooks/useRegister"
+import { useState } from "react";
+import { useRegister } from "./hooks/useRegister";
 import Link from "next/link";
 
 export default function RegisterPage() {
-  const { formData, isLoading,handleChange, handleSubmit } = useRegister();
+  const { formData, isLoading, error, handleChange, handleSubmit } =
+    useRegister();
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-10">
       <div className="mx-auto max-w-xl rounded-xl border bg-white p-6 sm:p-8">
-        <h1 className="text-3xl font-bold tracking-tight">Registro de estudiantes</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Registro de estudiantes
+        </h1>
         <p className="mt-2 text-gray-600">
-          Completa tus datos para crear tu cuenta. (Solo maqueta, sin lógica por ahora)
+          Completa tus datos para crear tu cuenta. (Solo maqueta, sin lógica por
+          ahora)
         </p>
         <form
           className="mt-6 grid gap-4"
           onSubmit={(e) => {
-            e.preventDefault()
-            handleSubmit(e)
+            e.preventDefault();
+            handleSubmit(e);
           }}
         >
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
               Nombre completo
             </label>
             <input
@@ -36,7 +43,10 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Correo
             </label>
             <input
@@ -51,7 +61,10 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Contraseña
             </label>
             <input
@@ -65,6 +78,7 @@ export default function RegisterPage() {
               required
               minLength={8}
             />
+            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
           </div>
           <button
             type="submit"
@@ -82,5 +96,5 @@ export default function RegisterPage() {
         </p>
       </div>
     </section>
-  )
+  );
 }

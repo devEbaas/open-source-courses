@@ -94,7 +94,7 @@ export default function ResultsPage() {
           Descargar resultados
         </button>
         <Link
-          href="/"
+          href="/courses"
           className="rounded-md bg-emerald-600 px-4 py-2.5 text-white hover:bg-emerald-700"
         >
           Volver al inicio
