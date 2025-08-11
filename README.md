@@ -62,6 +62,8 @@ pnpm install   # (o npm install)
 ```
 
 Esto instalará dependencias en `frontend` y `backend` (workspaces). Alternativamente puedes entrar a cada carpeta y ejecutar la instalación por separado.
+- cd frontend -> pnpm install / npm install
+- cd backend -> pnpm install / npm install
 
 ### Crear la base de datos (una sola vez)
 
@@ -216,10 +218,12 @@ Responde a continuación (deja cada respuesta bajo la pregunta correspondiente):
     - Cache / React Query para mejoras de rendimiento y menor tráfico.
     - Seguridad adicional: rate limiting, refresh tokens, mejores políticas de cookies.
     - Ampliar cobertura de tests (controladores, integración, componentes UI críticos).
+    - Implementar SSC en nextjs para mejorar el rendimiento
   - UX / UI:
     - Tema claro/oscuro completo y branding consistente.
     - Accesibilidad (roles ARIA, focus visible, contraste).
     - SEO avanzado (meta dinámicas, Open Graph, sitemap, structured data).
+    - Skeletons para la carga de páginas 
   - Observabilidad:
     - Logging estructurado y métricas simples (latencia, errores) + healthchecks ampliados.
   - Documentación:

@@ -32,6 +32,7 @@ pnpm dev           # Desarrollo con reload
 pnpm build         # Compilar a dist/
 pnpm start         # Ejecutar compilado
 pnpm seed          # Recrea esquema + datos iniciales (destruye datos previos)
+pnpm db:sync       # Sincroniza todas las tablas (global, alter, sin borrar datos)
 pnpm sync:users    # Sincroniza SOLO tabla users
 pnpm sync:results  # Sincroniza tablas assessment_results y detalle
 pnpm sync:all      # Sincroniza todas las tablas (alter, sin borrar datos)
@@ -43,25 +44,25 @@ pnpm sync:all      # Sincroniza todas las tablas (alter, sin borrar datos)
    ```sql
    CREATE DATABASE IF NOT EXISTS courses CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
-3. Seed inicial (crea tablas y datos base):
-   ```bash
-   pnpm seed
-   ```
-4. Sync inicial (crea tablas):
-   ```bash
-   pnpm sync:all
-   ```
-5. Levanta el servidor:
+3. (Elige UNO de estos) Crear tablas:
+   - Opción A (no destructivo):
+     ```bash
+     pnpm db:sync    # o pnpm sync:all
+     ```
+   - Opción B (reset + datos demo, DESTRUCTIVO):
+     ```bash
+     pnpm seed
+     ```
+4. Levanta el servidor:
    ```bash
    pnpm dev
    ```
-5. Prueba healthcheck: `GET http://localhost:4000/ping`
+5. Prueba healthcheck: `GET http://localhost:4000/ping` -> `{ "message": "pong", "db": "ok|pending" }`
 
 ## Datos insertados por el seed
 - Categorías: Programación Frontend / Programación Backend
 - Curso principal: "Desarrollo Fullstack" con un Assessment y 10 preguntas (5 por categoría)
 - Cursos adicionales sin assessment: "Desarrollo Frontend" y "Desarrollo Backend"
-- Usuario demo: `demo@example.com` (password hash placeholder)
 
 ## Estructura de carpetas (principal)
 ```
@@ -131,7 +132,11 @@ Escenarios:
 - Ajustes generales (sin borrar datos): `pnpm sync:all`
 - Reset completo + datos demo: `pnpm seed`
 
-`sync:*` usa `Model.sync({ alter: true })` (aplica cambios sin truncar). `seed` hace `sync({ force: true })` internamente (borra y recrea).
+`db:sync` y `sync:*` usan `Model.sync({ alter: true })` (intenta aplicar cambios sin truncar). `seed` hace `sync({ force: true })` internamente (borra y recrea todo) y luego inserta datos demo.
+
+Advertencias:
+- Usa `seed` solo en entornos de desarrollo o para un reset controlado.
+- `alter` es heurístico; para producción real conviene migraciones (umzug / sequelize-cli).
 
 ## Buenas prácticas implementadas
 - Separación de capas (controllers / routes / middleware)
