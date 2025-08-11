@@ -52,7 +52,7 @@ export const LayoutContainer = ({
         <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-gray-600 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Cursos Open Source</p>
           <p className="text-gray-500">
-            Base de proyecto lista para implementar lógica real.
+            Hecho con ❤️ por{" "}Eduardo Baas Kauil
           </p>
         </div>
       </footer>
