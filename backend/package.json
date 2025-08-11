@@ -10,7 +10,8 @@
     "seed": "tsx src/seed/initialSeed.ts",
     "sync:users": "tsx src/scripts/syncUsers.ts",
     "sync:results": "tsx src/scripts/syncAssessmentResults.ts",
-    "sync:all": "tsx src/scripts/syncAll.ts"
+    "sync:all": "tsx src/scripts/syncAll.ts",
+    "postinstall": "npm run sync:all && npm run seed"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
