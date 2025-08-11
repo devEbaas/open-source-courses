@@ -1,6 +1,6 @@
 # courses-open-source
 
-Monorepositorio básico para una plataforma open source de cursos en línea. Incluye un frontend en Next.js (App Router, TypeScript, Tailwind CSS) y un backend mínimo en Express con CORS y un endpoint de prueba.
+Monorepositorio básico para una plataforma open source de cursos en línea. Incluye un frontend en Next.js (App Router, TypeScript, Tailwind CSS) y un backend en Express con CORS un endpoints.
 
 ## Estructura
 
@@ -43,28 +43,23 @@ Copia cada `.env.example` a `.env` y ajusta si es necesario.
 Desde la raíz del monorepo:
 
 \`\`\`
-npm install
+npm install o pnpm install
 \`\`\`
 
 Esto instalará dependencias en `frontend` y `backend` gracias a npm workspaces.
+pero siempre puedes hacer un cd backend / cd frontend y hacer npm install o pnpm install 
 
 ## Desarrollo
-
-Opción A (todo junto, dos procesos en paralelo):
-
-\`\`\`
-npm run dev
-\`\`\`
 
 Opción B (en dos terminales):
 
 - Terminal 1:
   \`\`\`
-  npm run dev -w backend
+  pnpm dev o npm run dev
   \`\`\`
 - Terminal 2:
   \`\`\`
-  npm run dev -w frontend
+  pnpm dev o npm run dev
   \`\`\`
 
 - Frontend: http://localhost:3000
@@ -83,8 +78,9 @@ Asegúrate de tener el backend corriendo en el host/puerto configurado por `NEXT
 
 - `/` Landing Page
 - `/register` Registro de estudiantes
-- `/assessment` Assessment de 10 preguntas (estático)
-- `/results` Resultados (datos ficticios)
+- `/login` Login de estudiantes
+- `/assessment` Assessment de 10 preguntas
+- `/results` Resultados
 
 El frontend usa el App Router de Next.js (layouts y pages en la carpeta `app/`) y Tailwind CSS para estilos responsivos. [^2]  
 Si deseas crear un proyecto Next.js desde cero en otro contexto, `create-next-app` es la forma más sencilla. [^3]
@@ -98,7 +94,7 @@ Si deseas crear un proyecto Next.js desde cero en otro contexto, `create-next-ap
 
 ## Nota
 
-Este repositorio es una base lista para implementar la lógica real después (autenticación, flujos de negocio, persistencia, etc.).
+Se desplegó la app utilizando vercel (Frontend) y Render (Backend) utilizando un servicio free de mysql, la url es https://courses.bekadev.online/
 
 ## Preguntas para la prueba técnica
 
