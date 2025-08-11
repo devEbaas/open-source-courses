@@ -1,29 +1,34 @@
-import "dotenv/config";
-import cookieParser from "cookie-parser";
-import express from "express";
-import cors from "cors";
-import { testSequelizeConnection } from "./sequelize";
-import authRoutes from "./routes/auth";
-import courseRoutes from './routes/course.routes';
-import assessmentRoutes from './routes/assessment.routes';
-import { errorHandler } from './middleware/errorHandler';
-const app = express();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const sequelize_1 = require("./sequelize");
+const auth_1 = __importDefault(require("./routes/auth"));
+const course_routes_1 = __importDefault(require("./routes/course.routes"));
+const assessment_routes_1 = __importDefault(require("./routes/assessment.routes"));
+const errorHandler_1 = require("./middleware/errorHandler");
+const app = (0, express_1.default)();
 let dbReady = false;
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
-app.use(cors({
+app.use((0, cors_1.default)({
     origin: CORS_ORIGIN,
     credentials: true,
 }));
-app.use(cookieParser());
-app.use(express.json());
+app.use((0, cookie_parser_1.default)());
+app.use(express_1.default.json());
 app.get("/ping", (_req, res) => {
     return res.status(200).json({ message: "pong", db: dbReady ? 'ok' : 'pending' });
 });
-app.use("/auth", authRoutes);
-app.use('/courses', courseRoutes);
-app.use('/assessments', assessmentRoutes);
-app.use(errorHandler);
+app.use("/auth", auth_1.default);
+app.use('/courses', course_routes_1.default);
+app.use('/assessments', assessment_routes_1.default);
+app.use(errorHandler_1.errorHandler);
 async function start() {
     app.listen(PORT, () => {
         console.log(`[backend] listening on http://localhost:${PORT}`);
@@ -32,7 +37,7 @@ async function start() {
 }
 async function connectToDatabase() {
     try {
-        await testSequelizeConnection();
+        await (0, sequelize_1.testSequelizeConnection)();
         dbReady = true;
         console.log("[backend] DB conectado (Sequelize)");
     }

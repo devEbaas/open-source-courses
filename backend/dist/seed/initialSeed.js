@@ -1,27 +1,29 @@
-import 'dotenv/config';
-import { sequelize, Category, Question, Answer, Course, Assessment, User } from "../models";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
+const models_1 = require("../models");
 async function seed() {
     try {
         // Desactivar checks para poder dropear tablas con FKs legacy (assessmentId antiguo)
-        await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-        await sequelize.sync({ force: true });
-        await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
-        const frontend = await Category.create({ name: "Programación Frontend" });
-        const backend = await Category.create({ name: "Programación Backend" });
-        const fullstackCourse = await Course.create({
+        await models_1.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+        await models_1.sequelize.sync({ force: true });
+        await models_1.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+        const frontend = await models_1.Category.create({ name: "Programación Frontend" });
+        const backend = await models_1.Category.create({ name: "Programación Backend" });
+        const fullstackCourse = await models_1.Course.create({
             name: 'Desarrollo Fullstack',
             description: 'Curso que cubre fundamentos frontend y backend.'
         });
         // Cursos adicionales sin assessment (solo para listado)
-        const frontendCourse = await Course.create({
+        const frontendCourse = await models_1.Course.create({
             name: 'Desarrollo Frontend',
             description: 'Curso enfocado en HTML, CSS, JavaScript y frameworks de interfaz.'
         });
-        const backendCourse = await Course.create({
+        const backendCourse = await models_1.Course.create({
             name: 'Desarrollo Backend',
             description: 'Curso enfocado en APIs, bases de datos, autenticación y lógica de negocio.'
         });
-        const assessment = await Assessment.create({
+        const assessment = await models_1.Assessment.create({
             name: 'Assessment Inicial Fullstack',
             description: 'Evaluación diagnóstica de fundamentos frontend y backend.',
             courseId: fullstackCourse.id
@@ -222,9 +224,9 @@ async function seed() {
         // Función para insertar preguntas y respuestas
         async function insertQuestions(questions, categoryId, assessmentId) {
             for (const q of questions) {
-                const question = await Question.create({ text: q.text, categoryId, assessmentId });
+                const question = await models_1.Question.create({ text: q.text, categoryId, assessmentId });
                 for (const a of q.answers) {
-                    await Answer.create({
+                    await models_1.Answer.create({
                         text: a.text,
                         isCorrect: a.isCorrect,
                         questionId: question.id,
@@ -235,7 +237,7 @@ async function seed() {
         await insertQuestions(frontendQuestions.slice(0, 5), frontend.id, assessment.id);
         await insertQuestions(backendQuestions.slice(0, 5), backend.id, assessment.id);
         // Usuario demo
-        const demoUser = await User.create({ name: 'Demo User', email: 'demo@example.com', passwordHash: 'demo-hash' });
+        const demoUser = await models_1.User.create({ name: 'Demo User', email: 'demo@example.com', passwordHash: 'demo-hash' });
         console.log(`✅ Cursos creados: ${fullstackCourse.name} (con assessment), ${frontendCourse.name}, ${backendCourse.name}. Usuario demo ${demoUser.email}`);
         console.log("✅ Seed completado con éxito");
     }
@@ -243,7 +245,7 @@ async function seed() {
         console.error("❌ Error en seed:", error);
     }
     finally {
-        await sequelize.close();
+        await models_1.sequelize.close();
     }
 }
 seed();

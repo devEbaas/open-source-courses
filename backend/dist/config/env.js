@@ -1,5 +1,8 @@
-import 'dotenv/config';
-export const env = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.env = void 0;
+require("dotenv/config");
+exports.env = {
     nodeEnv: process.env.NODE_ENV || 'development',
     port: Number(process.env.PORT || 4000),
     corsOrigin: process.env.CORS_ORIGIN || '*',

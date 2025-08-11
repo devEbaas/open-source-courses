@@ -1,20 +1,24 @@
-import { DataTypes, Model } from 'sequelize';
-export class Course extends Model {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Course = void 0;
+const sequelize_1 = require("sequelize");
+class Course extends sequelize_1.Model {
 }
-export default (sequelize) => {
+exports.Course = Course;
+exports.default = (sequelize) => {
     Course.init({
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
             autoIncrement: true,
             primaryKey: true,
         },
         name: {
-            type: DataTypes.STRING,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
             unique: true,
         },
         description: {
-            type: DataTypes.STRING(500),
+            type: sequelize_1.DataTypes.STRING(500),
             allowNull: false,
         },
     }, {

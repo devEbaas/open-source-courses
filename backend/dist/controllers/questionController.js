@@ -1,15 +1,18 @@
-import { Question, Answer, Category } from '../models';
-export const getQuestions = async (_req, res) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getQuestions = void 0;
+const models_1 = require("../models");
+const getQuestions = async (_req, res) => {
     try {
-        const questions = await Question.findAll({
+        const questions = await models_1.Question.findAll({
             include: [
                 {
-                    model: Category,
+                    model: models_1.Category,
                     as: "category",
                     attributes: ["id", "name"],
                 },
                 {
-                    model: Answer,
+                    model: models_1.Answer,
                     as: "answers",
                 },
             ],
@@ -21,3 +24,4 @@ export const getQuestions = async (_req, res) => {
         res.status(500).json({ error: "Error fetching questions" });
     }
 };
+exports.getQuestions = getQuestions;

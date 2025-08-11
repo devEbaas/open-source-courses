@@ -1,15 +1,17 @@
-import { DataTypes, Model } from "sequelize";
-export default (sequelize) => {
-    class Category extends Model {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const sequelize_1 = require("sequelize");
+exports.default = (sequelize) => {
+    class Category extends sequelize_1.Model {
     }
     Category.init({
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement: true,
         },
         name: {
-            type: DataTypes.STRING,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
             unique: true,
         },

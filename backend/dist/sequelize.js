@@ -1,4 +1,9 @@
-import { Sequelize } from 'sequelize';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sequelize = void 0;
+exports.testSequelizeConnection = testSequelizeConnection;
+exports.listCourses = listCourses;
+const sequelize_1 = require("sequelize");
 const DB_NAME = process.env.DB_NAME || '';
 const DB_USER = process.env.DB_USER || '';
 const DB_PASSWORD = process.env.DB_PASSWORD || '';
@@ -7,7 +12,7 @@ const DB_PORT = process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306;
 let sequelizeInstance = null;
 function createSequelize() {
     if (process.env.DATABASE_URL) {
-        return new Sequelize(process.env.DATABASE_URL, {
+        return new sequelize_1.Sequelize(process.env.DATABASE_URL, {
             dialect: 'mysql',
             logging: false,
             define: { freezeTableName: true },
@@ -16,7 +21,7 @@ function createSequelize() {
     if (!DB_NAME || !DB_USER || !DB_HOST) {
         console.warn('[backend] Variables DB incompletas: se pospone conexión hasta que estén disponibles');
     }
-    return new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+    return new sequelize_1.Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
         host: DB_HOST,
         port: DB_PORT,
         dialect: 'mysql',
@@ -24,13 +29,13 @@ function createSequelize() {
         define: { freezeTableName: true },
     });
 }
-export const sequelize = (() => {
+exports.sequelize = (() => {
     sequelizeInstance = createSequelize();
     return sequelizeInstance;
 })();
-export async function testSequelizeConnection() {
+async function testSequelizeConnection() {
     try {
-        await sequelize.authenticate();
+        await exports.sequelize.authenticate();
         return true;
     }
     catch (err) {
@@ -38,8 +43,8 @@ export async function testSequelizeConnection() {
         throw err;
     }
 }
-export async function listCourses(limit = 100) {
-    const [rows] = await sequelize.query('SELECT * FROM courses LIMIT :limit', {
+async function listCourses(limit = 100) {
+    const [rows] = await exports.sequelize.query('SELECT * FROM courses LIMIT :limit', {
         replacements: { limit },
     });
     return rows;

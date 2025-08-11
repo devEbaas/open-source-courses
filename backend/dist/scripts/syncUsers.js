@@ -1,17 +1,19 @@
-import 'dotenv/config';
-import { sequelize, User } from '../models';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
+const models_1 = require("../models");
 async function syncUsers() {
     try {
-        await sequelize.authenticate();
+        await models_1.sequelize.authenticate();
         console.log('[sync:users] Conectado a DB');
-        await User.sync({ alter: true });
+        await models_1.User.sync({ alter: true });
         console.log('[sync:users] Tabla users sincronizada (create/alter)');
     }
     catch (e) {
         console.error('[sync:users] Error:', e);
     }
     finally {
-        await sequelize.close();
+        await models_1.sequelize.close();
     }
 }
 syncUsers();

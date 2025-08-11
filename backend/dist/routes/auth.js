@@ -1,19 +1,24 @@
-import { Router } from 'express';
-import jwt from "jsonwebtoken";
-import bcrypt from 'bcryptjs';
-import { User } from '../models';
-const router = Router();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const models_1 = require("../models");
+const router = (0, express_1.Router)();
 router.post('/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
         if (!name || !email || !password)
             return res.status(400).json({ error: 'name, email, password requeridos' });
-        const exists = await User.findOne({ where: { email } });
+        const exists = await models_1.User.findOne({ where: { email } });
         if (exists)
             return res.status(409).json({ error: 'Email ya registrado' });
-        const hash = await bcrypt.hash(password, 10);
-        const user = await User.create({ name, email, passwordHash: hash });
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const hash = await bcryptjs_1.default.hash(password, 10);
+        const user = await models_1.User.create({ name, email, passwordHash: hash });
+        const token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // Solo en https en prod
@@ -32,13 +37,13 @@ router.post('/login', async (req, res) => {
         const { email, password } = req.body;
         if (!email || !password)
             return res.status(400).json({ error: 'email y password requeridos' });
-        const user = await User.findOne({ where: { email } });
+        const user = await models_1.User.findOne({ where: { email } });
         if (!user)
             return res.status(401).json({ error: 'Credenciales inválidas' });
-        const ok = await bcrypt.compare(password, user.passwordHash);
+        const ok = await bcryptjs_1.default.compare(password, user.passwordHash);
         if (!ok)
             return res.status(401).json({ error: 'Credenciales inválidas' });
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // Solo en https en prod
@@ -57,7 +62,7 @@ router.get('/me', async (req, res) => {
         const token = req.cookies.token;
         if (!token)
             return res.status(401).json({ error: 'No autorizado' });
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         res.json({ user: decoded });
     }
     catch (e) {
@@ -69,4 +74,4 @@ router.post("/logout", (req, res) => {
     res.clearCookie("token");
     res.json({ message: "Sesión cerrada" });
 });
-export default router;
+exports.default = router;

@@ -1,23 +1,27 @@
-import { DataTypes, Model } from "sequelize";
-export class Answer extends Model {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Answer = void 0;
+const sequelize_1 = require("sequelize");
+class Answer extends sequelize_1.Model {
 }
-export default (sequelize) => {
+exports.Answer = Answer;
+exports.default = (sequelize) => {
     Answer.init({
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
             autoIncrement: true,
             primaryKey: true,
         },
         questionId: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
         text: {
-            type: DataTypes.STRING,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         isCorrect: {
-            type: DataTypes.BOOLEAN,
+            type: sequelize_1.DataTypes.BOOLEAN,
             allowNull: false,
         },
     }, {
