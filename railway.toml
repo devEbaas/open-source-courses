@@ -1,18 +1,13 @@
 [build]
-root = "backend"
+# Railway a veces ignora root para monorepos; forzamos comandos que operan dentro de backend/
+buildCommand = "npm --prefix backend install && npm --prefix backend run build"
 
-# Servicio backend (Express + TypeScript)
-[services.backend]
-root = "backend"
-installCommand = "npm install"
-buildCommand = "npm run build"
-startCommand = "npm run start"
+[deploy]
+startCommand = "npm --prefix backend run start"
 healthcheckPath = "/ping"
 healthcheckTimeout = 30
-numReplicas = 1
-# regions = ["iad"]
+restartPolicyType = "on_failure"
 
 # NOTA IMPORTANTE:
 # El script postinstall en backend/package.json ejecuta sync:all + seed (BORRA Y RECREA TABLAS)
-# Para producción recomienda eliminar ese postinstall o protegerlo con NODE_ENV !== 'production'.
-# Si lo mantienes, cada despliegue reseteará la base de datos.
+# Para producción elimina ese postinstall o condiciona con: `if [ \"$NODE_ENV\" != \"production\" ]; then npm run sync:all && npm run seed; fi`.
