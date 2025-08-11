@@ -1,2 +1,18 @@
 [build]
 root = "backend"
+
+# Servicio backend (Express + TypeScript)
+[services.backend]
+root = "backend"
+installCommand = "npm install"
+buildCommand = "npm run build"
+startCommand = "npm run start"
+healthcheckPath = "/ping"
+healthcheckTimeout = 30
+numReplicas = 1
+# regions = ["iad"]
+
+# NOTA IMPORTANTE:
+# El script postinstall en backend/package.json ejecuta sync:all + seed (BORRA Y RECREA TABLAS)
+# Para producción recomienda eliminar ese postinstall o protegerlo con NODE_ENV !== 'production'.
+# Si lo mantienes, cada despliegue reseteará la base de datos.
