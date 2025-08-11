@@ -5,7 +5,7 @@ buildCommand = "npm --prefix backend install && npm --prefix backend run build"
 [deploy]
 startCommand = "npm --prefix backend run start"
 healthcheckPath = "/ping"
-healthcheckTimeout = 30
+healthcheckTimeout = 60
 restartPolicyType = "on_failure"
 
 # NOTA IMPORTANTE:

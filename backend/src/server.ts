@@ -9,6 +9,7 @@ import assessmentRoutes from './routes/assessment.routes';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
+let dbReady = false;
 
 const PORT: number = process.env.PORT ? Number(process.env.PORT) : 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
@@ -23,7 +24,9 @@ app.use(cookieParser());
 
 app.use(express.json());
 
-app.get("/ping", (_req: Request, res: Response) => res.status(200).json({ message: "pong" }));
+app.get("/ping", (_req: Request, res: Response) => {
+  return res.status(200).json({ message: "pong", db: dbReady ? 'ok' : 'pending' });
+});
 
 app.use("/auth", authRoutes);
 
@@ -42,10 +45,12 @@ async function start(): Promise<void> {
 async function connectToDatabase(): Promise<void> {
   try {
     await testSequelizeConnection();
+    dbReady = true;
     console.log("[backend] DB conectado (Sequelize)");
   } catch (e) {
-    console.error("[backend] Error conectando a la DB, reintentando en 5s", e);
-    setTimeout(connectToDatabase, 5000); // reintenta sin bloquear
+    dbReady = false;
+    console.error("[backend] Error conectando a la DB, reintentando en 5s");
+    setTimeout(connectToDatabase, 5000);
   }
 }
 
