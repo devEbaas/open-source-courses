@@ -162,6 +162,7 @@ Stack / características:
   - Crear schema manual antes del primer deploy.
   - Ejecutar `db:sync` o, si quieres datos demo, `seed` (solo una vez) localmente o mediante un job manual.
   - Evitar usar `seed` automáticamente en cada arranque en producción.
+  - IMPORTANTE: Al estar el backend en un host gratuito, se pone en resposo pasado un tiempo, por lo cual al acceder al sitio, hay que esperar unos segundos hasta que se vuelva a activar el backend
 
 ## Preguntas para la prueba técnica
 
