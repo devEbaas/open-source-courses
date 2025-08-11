@@ -47,6 +47,20 @@ async function connectToDatabase(): Promise<void> {
     await testSequelizeConnection();
     dbReady = true;
     console.log("[backend] DB conectado (Sequelize)");
+    // Opcional: auto sync controlado por env
+    if (process.env.DB_AUTO_SYNC === 'true') {
+      const { sequelize } = await import('./models');
+      const force = process.env.DB_FORCE_SYNC === 'true';
+      const alter = process.env.DB_ALTER_SYNC === 'true';
+      console.log(`[backend] Ejecutando sequelize.sync (force=${force} alter=${alter})`);
+      await sequelize.sync({ force, alter });
+      console.log('[backend] sync completado');
+      if (process.env.DB_AUTO_SEED === 'true') {
+        console.log('[backend] Ejecutando seed inicial (DB_AUTO_SEED=true)');
+        // Import dinámico para no cargar siempre
+        await import('./seed/initialSeed');
+      }
+    }
   } catch (e) {
     dbReady = false;
     console.error("[backend] Error conectando a la DB, reintentando en 5s");
