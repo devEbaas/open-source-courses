@@ -1,5 +1,5 @@
 import { api } from "@/app/api";
-import { IAssessment, IResult } from "../porps.interface";
+import { IAssessment, IResult } from "../props.interface";
 
 export const fetchAssessment = async (id: string) => {
   const response = await api.get(`/assessments/${id}`);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Answer, Assessment, Question } from "../porps.interface";
+import { Answer, Assessment, Question } from "../props.interface";
 import { fetchAssessment, submitAssessmentService } from "../services/assessmentService";
 import { useAuth } from "@/app/context/AuthContext";
 
