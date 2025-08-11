@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerUser } from "../services/registerService";
 import { IFormData } from "../props.interface";
@@ -6,13 +6,14 @@ import { useAuth } from "@/app/context/AuthContext";
 
 export const useRegister = () => { 
   const router = useRouter();
-  const { setUser } = useAuth();
+  const { setUser, user } = useAuth();
   const [formData, setFormData] = useState<IFormData>({
     name: '',
     email: '',
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,6 +29,7 @@ export const useRegister = () => {
       router.push("/");
     } catch (error) {
       console.error("Error registering user:", error);
+      setError("Ha ocurrido un error al registrar al usuario");
     } finally {
       setIsLoading(false);
     }
@@ -38,9 +40,20 @@ export const useRegister = () => {
     await saveUser();
   };
 
+  const validateSession = async () => {
+    if (user?.id) {
+      router.push("/courses");
+    }
+  };
+
+  useEffect(() => {
+    validateSession();
+  }, [user]);
+
   return {
     formData,
     isLoading,
+    error,
     handleChange,
     handleSubmit,
   };

@@ -10,7 +10,8 @@
     "seed": "tsx src/seed/initialSeed.ts",
     "sync:users": "tsx src/scripts/syncUsers.ts",
     "sync:results": "tsx src/scripts/syncAssessmentResults.ts",
-    "sync:all": "tsx src/scripts/syncAll.ts"
+    "sync:all": "tsx src/scripts/syncAll.ts",
+    "postinstall": "npm run sync:all && npm run seed"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -27,6 +28,7 @@
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.2.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",

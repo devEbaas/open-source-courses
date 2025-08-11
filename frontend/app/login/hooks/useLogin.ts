@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "../services/loginService";
 import { useAuth } from "@/app/context/AuthContext";
 
 export const useLogin = () => {
   const router = useRouter();
-  const { setUser } = useAuth();
+  const { setUser, user } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +28,16 @@ export const useLogin = () => {
       setIsLoading(false);
     }
   };
+
+  const validateSession = async () => {
+    if (user?.id) {
+      router.push("/courses");
+    }
+  };
+  
+  useEffect(() => {
+    validateSession();
+  }, [user]);
 
   return {
     formData,
