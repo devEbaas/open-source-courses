@@ -52,7 +52,6 @@ router.post('/login', async (req, res) => {
 router.get('/me', async (req, res) => {
   try {
     const token = req.cookies.token
-    console.log(token)
     if (!token) return res.status(401).json({ error: 'No autorizado' })
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
     res.json({ user: decoded });
@@ -60,6 +59,11 @@ router.get('/me', async (req, res) => {
     console.error('Error getting user', e)
     res.status(500).json({ error: 'DB error' })
   }
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Sesión cerrada" });
 });
 
 export default router

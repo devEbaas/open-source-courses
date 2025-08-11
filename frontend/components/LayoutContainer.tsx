@@ -1,6 +1,8 @@
 "use client";
 
 import { useAuth } from "@/app/context/AuthContext";
+import { LogoutButton } from "./LogoutButton";
+import Link from "next/link";
 
 export const LayoutContainer = ({
   children,
@@ -17,10 +19,14 @@ export const LayoutContainer = ({
           </a>
           <nav className="flex gap-4 text-sm">
             {!user?.id && (
-              <a href="/register" className="hover:underline">
-                Registro
-              </a>
+              <Link
+                href="/register"
+                className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-teal-600 text-white font-semibold rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-3xl"
+              >
+                <span>Registrate</span>{" "}
+              </Link>
             )}
+            {user?.id && <LogoutButton />}
           </nav>
         </div>
       </header>
