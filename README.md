@@ -1,6 +1,6 @@
 # courses-open-source
 
-Monorepositorio básico para una plataforma open source de cursos en línea. Incluye un frontend en Next.js (App Router, TypeScript, Tailwind CSS) y un backend en Express con CORS un endpoints.
+Monorepositorio básico para una plataforma open source de cursos en línea. Incluye un frontend en Next.js (App Router, TypeScript, Tailwind CSS) y un backend en Express con CORS y endpoints REST.
 
 ## Estructura
 
@@ -26,53 +26,109 @@ Monorepositorio básico para una plataforma open source de cursos en línea. Inc
 
 ## Variables de entorno
 
-- `frontend/.env.example`:
-  \`\`\`
-  NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
-  \`\`\`
-- `backend/.env.example`:
-  \`\`\`
-  PORT=4000
-  CORS_ORIGIN=http://localhost:3000
-  \`\`\`
+Copiar cada `.env.example` a `.env` y ajustar.
 
-Copia cada `.env.example` a `.env` y ajusta si es necesario.
+Frontend (`frontend/.env`):
+```
+NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+```
+
+Backend (`backend/.env`):
+```
+PORT=4000
+CORS_ORIGIN=http://localhost:3000
+# Opción A (variables separadas):
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=courses
+DB_USER=root
+DB_PASSWORD=tu_clave
+# Opción B (una sola):
+# DATABASE_URL=mysql://user:pass@host:3306/courses
+
+JWT_SECRET=algún_valor_seguro
+```
+
+Notas:
+- Si usas `DATABASE_URL`, no necesitas las variables separadas.
+- Sequelize crea tablas, PERO no crea la base de datos: debes crear el schema antes.
 
 ## Instalación
 
 Desde la raíz del monorepo:
 
-\`\`\`
-npm install o pnpm install
-\`\`\`
+```
+pnpm install   # (o npm install)
+```
 
-Esto instalará dependencias en `frontend` y `backend` gracias a npm workspaces.
-pero siempre puedes hacer un cd backend / cd frontend y hacer npm install o pnpm install 
+Esto instalará dependencias en `frontend` y `backend` (workspaces). Alternativamente puedes entrar a cada carpeta y ejecutar la instalación por separado.
 
-## Desarrollo
+### Crear la base de datos (una sola vez)
 
-Opción B (en dos terminales):
+Asegúrate de tener MySQL/MariaDB en marcha y crea el schema:
+```
+CREATE DATABASE courses CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+Configura luego las variables de entorno del backend apuntando a ese schema.
 
-- Terminal 1:
-  \`\`\`
-  pnpm dev o npm run dev
-  \`\`\`
-- Terminal 2:
-  \`\`\`
-  pnpm dev o npm run dev
-  \`\`\`
+## Desarrollo local
 
+En dos terminales (recomendado):
+
+Terminal 1 (backend):
+```
+cd backend
+pnpm dev
+```
+
+Terminal 2 (frontend):
+```
+cd frontend
+pnpm dev
+```
+
+URLs por defecto:
 - Frontend: http://localhost:3000
 - Backend: http://localhost:4000
 
-## Producción (solo frontend)
+### Inicializar tablas y datos
 
-\`\`\`
-npm run build
-npm run start
-\`\`\`
+Tienes dos enfoques (ejecutar dentro de `backend/`):
 
-Asegúrate de tener el backend corriendo en el host/puerto configurado por `NEXT_PUBLIC_BACKEND_URL`.
+1. Sin destruir datos (crea/ajusta tablas):
+```
+pnpm run db:sync
+```
+2. Destructivo (DROP + recreate + datos demo):
+```
+pnpm run seed
+```
+
+El seed inserta categorías, cursos, assessment, preguntas/respuestas y un usuario demo. Úsalo solo al inicio o cuando quieras resetear todo.
+
+Resumen rápido:
+- `db:sync` -> conserva datos (usa `sync` por tabla con `alter: true`).
+- `seed` -> borra y recrea (usa `sync({ force: true })`).
+
+## Producción (frontend y backend)
+
+Backend (desde `backend/`):
+```
+pnpm build
+pnpm start
+```
+Si es la primera vez en un entorno limpio y ya creaste la base de datos vacía:
+```
+pnpm run db:sync   # o pnpm run seed si quieres datos demo y no hay nada que conservar
+```
+
+Frontend (desde `frontend/`):
+```
+pnpm build
+pnpm start
+```
+
+Verifica que `NEXT_PUBLIC_BACKEND_URL` apunte a la URL pública del backend en producción.
 
 ## Rutas incluidas (maquetas)
 
@@ -87,15 +143,23 @@ Si deseas crear un proyecto Next.js desde cero en otro contexto, `create-next-ap
 
 ## Backend
 
-- Express con:
-  - CORS (usa `CORS_ORIGIN` de .env)
-  - JSON parser
-  - `GET /ping` → `{ "message": "pong" }`
+Stack / características:
+- Express
+- CORS (usa `CORS_ORIGIN` de .env)
+- JSON parser
+- Healthcheck: `GET /ping` -> `{ message: "pong", db: "ok|pending" }`
+- Scripts utilitarios:
+  - `db:sync` (sin destruir datos)
+  - `seed` / `db:seed` (reset + datos demo)
+  - `sync:all` (sync incremental por modelo – similar a `db:sync` pero explícito por tabla)
 
-## Nota
+## Nota de despliegue
 
-- Se desplegó la app utilizando vercel (Frontend) y se le agregó un dominio personal
-- Render (Backend) utilizando un servicio free de mysql, la url es https://courses.bekadev.online/
+- Frontend: Vercel (root `frontend/`) con dominio personalizado.
+- Backend: Render (servicio Node) + instancia MySQL gratuita. URL pública: https://courses.bekadev.online/
+  - Crear schema manual antes del primer deploy.
+  - Ejecutar `db:sync` o, si quieres datos demo, `seed` (solo una vez) localmente o mediante un job manual.
+  - Evitar usar `seed` automáticamente en cada arranque en producción.
 
 ## Preguntas para la prueba técnica
 
